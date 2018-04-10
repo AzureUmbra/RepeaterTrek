@@ -2,6 +2,8 @@
 
 Currently in its infancy, RepeaterTrek will allow you to pull data from [RepeaterBook](https://www.repeaterbook.com/) and store it locally.  These local copies can be updated without having to pull a full repository again.  These repeaters can then be plotted on a map, with tooltips giving all of the information about them, including a link to it's page.  Finally, the primary use of RepeaterTrek is that it allows you to take a Google Maps trip and map out a your route with a list of all of the repeaters along your route.  This route can then be generated into a CHIRP file in order of your trip for easy radio programming!
 
+![Route Image](https://github.com/AzureUmbra/RepeaterTrek/blob/master/img/Route.JPG)
+
 ## Getting Started
 
 Currently the program exists as a single Python file with only definitions inside it.  Call the functions you want to run from the *main* function at the bottom.
