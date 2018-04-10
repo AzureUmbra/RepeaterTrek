@@ -143,7 +143,7 @@ Now sit back and enjoy your map!
 
 ## License
 
-This project is licensed under the GNU General Public License v3 - see the [LICENSE.md](LICENSE.md) file for details
+This project is licensed under the GNU General Public License v3 - see the [LICENSE.md](https://github.com/AzureUmbra/RepeaterTrek/blob/master/LICENSE) file for details
 
 ## Acknowledgments
 
