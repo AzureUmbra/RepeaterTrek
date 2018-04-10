@@ -37,7 +37,7 @@ def _dataToString(data):
     return string
 
 
-def parseFromWeb(fileName,URL,header='https://www.repeaterbook.com/repeaters/',wideArea=False,collect=True,getCoords=True,URLs=[]):
+def parseFromWeb(fileName,URL,wideArea=False,header='https://www.repeaterbook.com/repeaters/',collect=True,getCoords=True,URLs=[]):
     """
     PUBLIC
     Requests and parses repeater data from repeaterbook link.
@@ -386,4 +386,5 @@ def _wideAreaBuild(regular,wideArea):
     
 
 if __name__ == "__main__":
-    tripPlanner('DibervilleToRichmondHill',['GeorgiaWA','MississippiWA','FloridaWA','AlabamaWA'],15,30)
+    parseFromWeb('Texas','https://www.repeaterbook.com/repeaters/msResult.php?state_id%5B%5D=48&band=14&freq=&loc=&call=&features=%25&emcomm=%25&coverage=%25&status_id=1&order=%60freq%60%2C+%60state_abbrev%60+ASC',wideArea='https://www.repeaterbook.com/repeaters/msResult.php?state_id%5B%5D=48&band=14&freq=&loc=&call=&features=%25&emcomm=%25&coverage=wide&status_id=1&order=%60freq%60%2C+%60state_abbrev%60+ASC')
+    tripPlanner('Cross Texas',['TexasWA'],15,30)
