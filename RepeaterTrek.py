@@ -5,6 +5,7 @@ from gmplot import gmplot as gm
 import pickle
 from math import sqrt
 from geopy.distance import distance
+from copy import deepcopy as dc
 #gpsvisualizer.com, paste route URL, plain text, comma seperated
 
 def _dataToString(data):
@@ -24,6 +25,8 @@ def _dataToString(data):
         string += 'Time: ' + data['Time']
     else:
         string = 'Location: ' + data['Location'] + '\\n'
+        if "Distance" in data:
+            string += 'Distance: ' + data['Distance'] + '\\n'
         string += 'Frequency: ' + data['Frequency'] + '\\n'
         string += 'Offset: ' + data['Offset/shift'] + '\\n'
         string += 'Tone: ' + data['Tone'] + '\\n'
@@ -305,6 +308,9 @@ def tripPlanner(tripName,fileNames,dist,wideAreaDist=0):
     Return:
     None -- trip is saved as 'tripName'.trip, 'plotMap' saves a map with repeaters and route
     """
+
+    if wideAreaDist == 0:
+        wideAreaDist = dist
     # Grabs all repeaters and points that make up the trip
     repeaters = []
     for i in fileNames:
@@ -317,8 +323,11 @@ def tripPlanner(tripName,fileNames,dist,wideAreaDist=0):
         distCheck = wideAreaDist if repeaters[i]['Use'] == 'WIDE AREA' else dist
         print('Checking Repeater ' + str(i) + ' of ' + str(len(repeaters)))
         for j in routePoints:
-            if distance((float(repeaters[i]['Lat']),float(repeaters[i]['Lng'])),j).miles <= distCheck:
-                validRepeaters.append(repeaters[i])
+            reptDist = distance((float(repeaters[i]['Lat']),float(repeaters[i]['Lng'])),j).miles
+            if reptDist <= distCheck:
+                temp = dc(repeaters[i])
+                temp["Distance"] = reptDist
+                validRepeaters.append(temp)
                 break
 
     # Stores the selected repeaters so we never have to deal with that again
