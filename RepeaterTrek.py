@@ -26,7 +26,11 @@ def _dataToString(data):
     else:
         string = 'Location: ' + data['Location'] + '\\n'
         if "Distance" in data:
-            string += 'Distance: ' + data['Distance'] + '\\n'
+            string += 'Distance: ' + str(round(data['Distance'],2)) + ' Miles\\n'
+            string += "Beginning At: " + str(data["Begin"]) + '\\n'
+            string += "Ending At: " + str(data["End"]) + '\\n'
+            string += "Closest Approach At: " + str(data["Closest"]) + '\\n'
+            string += "For A Total Of: " + str(round(data["RouteLength"],2)) + ' Miles\\n'
         string += 'Frequency: ' + data['Frequency'] + '\\n'
         string += 'Offset: ' + data['Offset/shift'] + '\\n'
         string += 'Tone: ' + data['Tone'] + '\\n'
@@ -295,7 +299,7 @@ def blendMaps(fileNames,mapName):
     print('Map Saved as ' + mapName + '.html')
 
 # Quite slow due to massive comparisons; black magic math was thrown away
-def tripPlanner(tripName,fileNames,dist,wideAreaDist=0):
+def tripPlanner(tripName,fileNames,dist,wideAreaDist=0,smallestCoverage=0):
     """
     PUBLIC
     Plots repeaters along a route at a given distance and saves the repeater list
@@ -322,13 +326,28 @@ def tripPlanner(tripName,fileNames,dist,wideAreaDist=0):
     for i in range(len(repeaters)):
         distCheck = wideAreaDist if repeaters[i]['Use'] == 'WIDE AREA' else dist
         print('Checking Repeater ' + str(i) + ' of ' + str(len(repeaters)))
+        startingPt = False
+        endingPt = False
+        closest = 100000
+        closestPt = False
         for j in routePoints:
             reptDist = distance((float(repeaters[i]['Lat']),float(repeaters[i]['Lng'])),j).miles
             if reptDist <= distCheck:
-                temp = dc(repeaters[i])
-                temp["Distance"] = reptDist
+                endingPt = j
+                if not startingPt:
+                    startingPt = j
+                if reptDist < closest:
+                    closest = reptDist
+                    closestPt = j
+        if startingPt:
+            temp = dc(repeaters[i])
+            temp["Distance"] = closest
+            temp["Begin"] = startingPt
+            temp["End"] = endingPt
+            temp["Closest"] = closestPt
+            temp["RouteLength"] = distance(startingPt, endingPt).miles
+            if temp["RouteLength"] >= smallestCoverage:
                 validRepeaters.append(temp)
-                break
 
     # Stores the selected repeaters so we never have to deal with that again
     # Calls 'plotMap' to generate the trip map
@@ -395,5 +414,5 @@ def _wideAreaBuild(regular,wideArea):
     
 
 if __name__ == "__main__":
-    parseFromWeb('Texas','https://www.repeaterbook.com/repeaters/msResult.php?state_id%5B%5D=48&band=14&freq=&loc=&call=&features=%25&emcomm=%25&coverage=%25&status_id=1&order=%60freq%60%2C+%60state_abbrev%60+ASC',wideArea='https://www.repeaterbook.com/repeaters/msResult.php?state_id%5B%5D=48&band=14&freq=&loc=&call=&features=%25&emcomm=%25&coverage=wide&status_id=1&order=%60freq%60%2C+%60state_abbrev%60+ASC')
-    tripPlanner('Cross Texas',['TexasWA'],15,30)
+    #parseFromWeb('Louisiana','https://www.repeaterbook.com/repeaters/msResult.php?state_id%5B%5D=22&band=14&freq=&loc=&call=&features=%25&emcomm=%25&coverage=%25&status_id=1&order=%60freq%60%2C+%60state_abbrev%60+ASC',wideArea='https://www.repeaterbook.com/repeaters/msResult.php?state_id%5B%5D=22&band=14&freq=&loc=&call=&features=%25&emcomm=%25&coverage=wide&status_id=1&order=%60freq%60%2C+%60state_abbrev%60+ASC')
+    tripPlanner('DibervilleToNOLA',['MississippiWA','LouisianaWA'],15,30,10)
