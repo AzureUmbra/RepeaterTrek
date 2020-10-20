@@ -1,0 +1,5 @@
+.gitignore
+.git/
+:include .gitignore
+
+img/
