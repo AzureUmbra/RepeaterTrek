@@ -6,6 +6,8 @@ jobs:
   semgrep:
     name: semgrep
     runs-on: ubuntu-latest
+    env:
+      INPUT_PUBLISHURL: https://dev.semgrep.dev 
     steps:
     - uses: actions/checkout@master
     - name: Semgrep
