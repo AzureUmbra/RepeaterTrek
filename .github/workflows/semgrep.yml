@@ -6,8 +6,8 @@ jobs:
   semgrep:
     name: semgrep
     runs-on: ubuntu-latest
-    env:
-      INPUT_PUBLISHURL: https://dev.semgrep.dev 
+#    env:
+#      INPUT_PUBLISHURL: https://dev.semgrep.dev 
     steps:
     - uses: actions/checkout@master
     - name: Semgrep
@@ -15,5 +15,5 @@ jobs:
       uses: returntocorp/semgrep-action@v1
       with:
         publishToken: ${{ secrets.SEMGREP_APP_TOKEN }}
-        publishDeployment: 44
+        publishDeployment: 105
 #        config: r/all
